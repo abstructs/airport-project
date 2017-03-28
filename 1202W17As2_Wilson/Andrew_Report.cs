@@ -9,7 +9,9 @@ namespace W17As2_Wilson
 		public DateTime month = new DateTime(2016, 1, 1);
 		public decimal revenue;
 
-		// TODO: allow values to be updated, return report, create report menu
+		// TODO: allow values to be updated, needs report menu
+		// 1: Edit existing report
+		// 2: Create new report
 
 		public Andrew_Report(int flight_count, int passenger_count, decimal runway_charge, int month)
 		{

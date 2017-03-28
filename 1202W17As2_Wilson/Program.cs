@@ -6,12 +6,9 @@ namespace W17As2_Wilson
 	{
 		public static void Main(string[] args)
 		{
-			string name = "Pearsons";
-			string location = "Toronto";
-			decimal charge = 1500.99M;
-			Andrew_Airport airport1 = new Andrew_Airport(name, location, charge);
-
-			airport1.airport_menu();
+			Console.WriteLine("Welcome to Airportz!");
+			Andrew_User user1 = new Andrew_User();
+			user1.user_menu();
 		}
 	}
 }
