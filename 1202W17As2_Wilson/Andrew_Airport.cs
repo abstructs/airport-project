@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace W17As2_Wilson
 {
 	public class Andrew_Airport
@@ -6,9 +7,9 @@ namespace W17As2_Wilson
 		private string name;
 		private string location;
 		private decimal runway_charge;
+		private int report_count = 0;
 
-		private Andrew_Report[] reports = new Andrew_Report[12];
-		//Andrew_Helpers helper = new Andrew_Helpers();
+		private Andrew_Report[] reports = new Andrew_Report[12]; // maximum of 12 reports
 
 		public Andrew_Airport(string name, string location, decimal runway_charge)
 		{
@@ -19,31 +20,13 @@ namespace W17As2_Wilson
 
 		public Andrew_Airport()
 		{
-
-			int i = 0;
-
-			do
-			{
-				Console.Clear();
-				switch (i)
-				{
-					case (0):
-						this.name = Andrew_Helpers.get_string("Enter the name of this airport: ", "Name cannot be blank");
-						i++;
-						break;
-					case (1):
-						this.location = Andrew_Helpers.get_string("Enter the location of this airport: ", "Location cannot be blank");
-						i++; 
-						break;
-					case (2):
-						runway_charge = Andrew_Helpers.get_decimal("Enter the runway charge for this airport: ", 1499.99M, 3500.00M);
-						return;
-					default:
-						return;
-				}
-			} while (true);
+			Console.Clear();
+			this.name = get_name();
+			Console.Clear();
+			this.location = get_location();
+			Console.Clear();
+			this.runway_charge = get_runway_charge();
 		}
-		// TODO: Create menu for creating a report and accessing a report
 
 		private Andrew_Report create_report(int flight_count, int passenger_count, int month)
 		{
@@ -51,103 +34,89 @@ namespace W17As2_Wilson
 			return new Andrew_Report(flight_count, passenger_count, runway_charge, month);
 		}
 
-		public void show_airport()
+		public void show_all_data()
 		{
 			// puts all airport information into a friendly menu
-			Console.Clear();
-			Console.WriteLine("Name: {0} Location: {1} Runway Charge: {2}", name, location, runway_charge);
-			show_reports();
-			Console.WriteLine("\nPress any key to continue...");
-			Console.ReadKey();
-			Console.Clear();
+			Console.WriteLine("AIRPORT:\nName: {0} | Location: {1} | Runway Charge: {2:C}", name, location, runway_charge);
+			show_reports(); // shows all the reports
 		}
 
 		public override string ToString()
 		{
-			return string.Format("Name: {0} Location: {1} Runway Charge: {2}", name, location, runway_charge);
+			// override tostring class for easy string output 
+			return string.Format("| Name: {0} | Location: {1} | Runway Charge: {2:C} | Reports: {3} |", name, location, 
+			                     runway_charge, report_count);
 		}
 
 		public void airport_menu()
 		{
-			do
+			while(true)
 			{
 				Console.Clear();
-				string[] decisions = { "1: Add Airport Data",
-									   "2: View Statistical Report",
-									   "3: Exit" };
+				string[] decisions = {
+					"Welcome to the airport menu! Options: ",
+					"1: Add Airport Data",
+					"2: View Statistical Report",
+					"\n0: Exit" 
+				};
 
-				int number = Andrew_Helpers.get_int(decisions);
+				int number = Andrew_Helpers.get_int(decisions, 0, 2);
 
 				switch (number)
 				{
+					case (0):
+						return;
 					case(1):
 						// Enter airport data
-						set_data_menu();
+						edit_data_menu();
 						break;
 					case(2):
 						// View airport data in a report
-						show_airport();
+						Console.Clear();
+						show_all_data();
+						// pause to allow user to view report
+						Console.WriteLine("\nPress any key to continue...");
+						Console.ReadKey();
+						Console.Clear();
 						break;
-					case(3):
-						return;
 					default:
 						Andrew_Helpers.input_error();
 					break;
 				}
 
-			} while (true);
-		}
-
-		public void set_airport_menu()
-		{
-
-			string[] decisions = {  "Please choose an option...",
-									"1: Create a new data entry.",
-									"2: Edit an existing data entry." };
-
-			//Console.WriteLine("Do action for which airport?");
-			//show_reports();
-
-			int decision = Andrew_Helpers.get_int(decisions);
-
-			if (decision == 2)
-			{
-				set_data_menu(); // update airport menu
-			}
-			else
-			{
-				// set new airport data
 			}
 		}
 
 		private void show_reports()
 		{
-			int report_count = 0;
-			foreach (Andrew_Report report in reports)
-			{
-				if (report != null)
-				{
-					report_count++;
-					report.show_report();
-				}
-			}
-
 			if (report_count == 0)
 			{
 				Console.WriteLine("No reports created yet");
+				return;
 			}
+
+			Console.WriteLine("REPORTS: ");
+
+			foreach (Andrew_Report report in reports)
+			{
+				
+				if (report != null)
+				{
+					Console.WriteLine("{0}", report);
+				}
+			}
+
+
 		}
 
-		private void create_report()
+		public void create_report()
 		{
-			// month
-
 			int month = 0;
 			int flights = 0;
 			int passengers = 0;
 
 			int i = 0; // user inputs values in order, we use i to iterate through forms
-
+			// this code design is an "event handler"
 			do
 			{
 				Console.Clear();
@@ -163,11 +132,14 @@ namespace W17As2_Wilson
 							}
 							else
 							{
-								i++;
-								if (reports[month - 1] != null)
+								i++; // iterate to next switch statement as valid month was inputted
+								if (reports[month - 1] != null) // check if there's already a reporting existing in that index
 								{
-									string[] choices = { "There is already a report for that month, overwrite?",
-														  "1: Yes", "2: No" };
+									string[] choices = { 
+										"There is already a report for that month, overwrite?",
+										"1: Yes", "2: No"
+									};
+
 									int decision = Andrew_Helpers.get_int(choices, 1, 2);
 									if (decision == 2)
 									{
@@ -180,6 +152,7 @@ namespace W17As2_Wilson
 						{
 							Andrew_Helpers.input_error("Please enter a number");
 						}
+
 						Console.Clear();
 						break;
 					case (1):
@@ -194,7 +167,6 @@ namespace W17As2_Wilson
 							{
 								i++;
 							}
-
 						}
 						else
 						{
@@ -206,7 +178,6 @@ namespace W17As2_Wilson
 						Console.WriteLine("Enter Passengers: ");
 						if (int.TryParse(Console.ReadLine(), out passengers))
 						{
-
 							if (passengers < 0)
 							{
 								Andrew_Helpers.input_error("Please enter a positive number.");
@@ -226,27 +197,32 @@ namespace W17As2_Wilson
 						i++;
 						break;
 				}
-			} while (i <= 2); // breaks when questions have been asked
+			} while (i <= 2); // breaks when all 3 questions have been asked
+
 			// add report in appropriate place in report array
 			this.reports[month - 1] = create_report(flights, passengers, month);
+
+			// iterate report count 
+			report_count++;
+
 			Console.Clear();
 		}
 
-
-		public void set_data_menu()
+		public void edit_data_menu()
 		{
-			do
+			while(true)
 			{
 				Console.Clear();
-				string[] decisions = {	"1: Edit airport name",
-									  	"2: Edit airport Location",
-									  	"3: Edit airport runway charge",
-										"4: Create airport report",
-										"0: Back" };
+				string[] decisions = {
+					"1: Edit airport name. Currently: " + this.name,
+					"2: Edit airport Location. Currently: " + this.location,
+					"3: Edit airport runway charge. Currently: " + this.runway_charge.ToString("C"),
+					"4: Create airport report. There is currently " + this.report_count.ToString() + " reports.",
+					"\n0: Back" 
+				};
 
 				int number = Andrew_Helpers.get_int(decisions);
 
-				// TODO: Validate inputs
 				switch (number)
 				{
 					case (0):
@@ -254,15 +230,15 @@ namespace W17As2_Wilson
 						return;
 					case (1):
 						Console.Clear();
-						this.name = Andrew_Helpers.get_string("Enter the name of this airport: ", "Name cannot be blank");
+						this.name = get_name();
 						break;
 					case (2):
 						Console.Clear();
-						this.location = Andrew_Helpers.get_string("Enter the location of this airport: ", "Location cannot be blank");
+						this.location = get_location();
 						break;
 					case (3):
 						Console.Clear();
-						runway_charge = Andrew_Helpers.get_decimal("Enter the runway charge for this airport: ", 1499.99M, 3500.00M);
+						runway_charge = get_runway_charge();
 						break;
 					case (4):
 						create_report();
@@ -271,7 +247,22 @@ namespace W17As2_Wilson
 						Andrew_Helpers.input_error();
 						break;
 				}
-			} while (true);
+			}
+		}
+
+		private static string get_name()
+		{
+			return Andrew_Helpers.get_string("Enter the name of this airport: ", "Name cannot be blank");
+		}
+
+		private static string get_location()
+		{
+			return Andrew_Helpers.get_string("Enter the location of this airport: ", "Location cannot be blank");
+		}
+
+		private static decimal get_runway_charge()
+		{
+			return Andrew_Helpers.get_decimal("Enter the runway charge for this airport: ", 1499.99M, 3500.00M);
 		}
 	}
 }

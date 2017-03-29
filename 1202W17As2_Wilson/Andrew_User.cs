@@ -13,43 +13,58 @@ namespace W17As2_Wilson
 
 		public void user_menu()
 		{
-			do
+			string[] decisions = {
+					"Welcome to Airportz! What would you like to do?",
+					"1: Add Airport Data",
+					"2: View Statistical Report",
+					"\n0: Exit"
+				};
+
+			while(true)
 			{
 				Console.Clear();
-				string[] decisions = { "1: Add Airport Data",
-									   "2: View Statistical Report",
-									   "3: Exit" };
 
-				int number = Andrew_Helpers.get_int(decisions);
+
+				int number = Andrew_Helpers.get_int(decisions, 0, 2);
 
 				switch (number)
 				{
+					case (0):
+						Console.Clear();
+						int confirm = Andrew_Helpers.get_int("Would you like to exit the program?\n1: Yes\n2: No", 1, 2);
+						if (confirm == 1)
+						{
+							return;
+						}
+
+						break;
 					case (1):
 						set_airport();
 						break;
 					case (2):
-						get_airport();
+						show_airport_menu();
 						break;
-					case (3):
-						return;
 					default:
 						Andrew_Helpers.input_error();
 						break;
 				}
-
-			} while (true);
+			}
 		}
 
 		private void set_airport()
 		{
-			string[] decisions = { "1: Create new data entry",
-								   "2: Edit existing data entry/Add report to airport.",
-								   "0: Back" };
+			string[] decisions = { 
+				"You are in the airport data menu! Options: ",
+				"1: Create new airport entry",
+				"2: Edit an existing airport entry",
+				"3: Create report for an existing airport",
+				"\n0: Back" 
+			};
 
-			do
+			while(true)
 			{
 				Console.Clear();
-				int decision = Andrew_Helpers.get_int(decisions);
+				int decision = Andrew_Helpers.get_int(decisions, 0, 3);
 				switch (decision)
 				{
 					case(0):
@@ -60,25 +75,79 @@ namespace W17As2_Wilson
 					case(2):
 						edit_airport();
 						break;
+					case(3):
+						create_report();
+						break;
 					default:
 						return;
 				}
-			} while (true);
-
+			}
 		}
 
-		private void create_new_airport()
+		private void show_airport_menu()
 		{
-			Andrew_Airport new_airport = new Andrew_Airport();
-			airports[airports_length++] = new_airport;
+			Console.Clear();
+
+			if (airports_length == 0)
+			{
+				Andrew_Helpers.input_error("No airport data entered yet.");
+				return;
+			}
+
+			string[] decisions = { 
+				"View statistical report for which airport?",
+				get_airports_string(), // returns string of all airports
+				"-1: View All Airports And Reports",
+				"0: Back" 
+			};
+
+			while (true)
+			{
+				int decision = Andrew_Helpers.get_int(decisions, -1, airports_length);
+
+				if (decision == 0)
+				{
+					return;
+				}
+				else if (decision == -1)
+				{
+					show_all_airports_and_data();
+					Console.Clear();
+					continue;
+				}
+
+				Console.Clear();
+				airports[decision - 1].show_all_data();
+				Console.WriteLine("\nPress any key to continue...");
+				Console.ReadKey();
+				Console.Clear();
+			}
 		}
 
-		private void create_airport()
+		private void create_report()
 		{
-			Andrew_Airport airport = new Andrew_Airport();
-			airport.set_data_menu();
+			Console.Clear();
 
-			airports[airports_length++] = airport;
+			if (airports_length == 0)
+			{
+				Andrew_Helpers.input_error("No airport data entered yet.");
+				return;
+			}
+
+			string[] decisions = {
+				"Create report for which airport?",
+				get_airports_string(),
+				"0: Back"
+			};
+
+			int decision = Andrew_Helpers.get_int(decisions, 0, airports_length);
+
+			if (decision == 0)
+			{
+				return;
+			}
+
+			airports[decision - 1].create_report();
 		}
 
 		private void edit_airport()
@@ -91,8 +160,11 @@ namespace W17As2_Wilson
 				return;
 			}
 
-			string[] decisions = { "Edit/Add report to which airport?",
-									get_aiports(), "0: Back" };
+			string[] decisions = { 
+				"Add report to which airport?",
+				get_airports_string(), 
+				"\n0: Back" 
+			};
 
 			int decision = Andrew_Helpers.get_int(decisions, 0, airports_length);
 
@@ -101,10 +173,24 @@ namespace W17As2_Wilson
 				return;
 			}
 
-			airports[decision - 1].set_data_menu();
+			airports[decision - 1].edit_data_menu();
 		}
 
-		private string get_aiports()
+		private void create_new_airport()
+		{
+			Andrew_Airport new_airport = new Andrew_Airport();
+			airports[airports_length++] = new_airport;
+		}
+
+		private void create_airport()
+		{
+			Andrew_Airport airport = new Andrew_Airport();
+			airport.edit_data_menu();
+
+			airports[airports_length++] = airport;
+		}
+
+		private string get_airports_string()
 		{
 			string airports_string = "";
 			int count = 1;
@@ -119,25 +205,19 @@ namespace W17As2_Wilson
 			return airports_string;
 		}
 
-		private void get_airport()
+		private void show_all_airports_and_data()
 		{
-			if (airports_length == 0)
+			foreach (Andrew_Airport airport in airports)
 			{
-				Andrew_Helpers.input_error("No airport data entered yet.");
-				return;
+				if (airport != null)
+				{
+					airport.show_all_data();
+					Console.WriteLine("");
+				}
 			}
 
-			string[] decisions = { "View report for which airport to which airport?",
-									get_aiports(), "0: Back" };
-
-			int decision = Andrew_Helpers.get_int(decisions, 0, airports_length);
-
-			if (decision == 0)
-			{
-				return;
-			}
-
-			airports[decision - 1].show_airport();
+			Console.WriteLine("\nPress any key to continue...");
+			Console.ReadKey();
 		}
 
 		private void show_airports() // print out all the airports
@@ -148,7 +228,7 @@ namespace W17As2_Wilson
 			{
 				if (airport != null)
 				{
-					Console.WriteLine("{0}. {1}", ++airport_count, airport);
+					Console.WriteLine("{0}: {1}", ++airport_count, airport);
 				}
 			}
 		}

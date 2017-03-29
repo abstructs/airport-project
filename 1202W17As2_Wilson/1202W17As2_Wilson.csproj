@@ -32,7 +32,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Andrew_Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Andrew_Airport.cs" />
     <Compile Include="Andrew_Report.cs" />

@@ -9,17 +9,13 @@ namespace W17As2_Wilson
 		public DateTime month = new DateTime(2016, 1, 1);
 		public decimal revenue;
 
-		// TODO: allow values to be updated, needs report menu
-		// 1: Edit existing report
-		// 2: Create new report
-
 		public Andrew_Report(int flight_count, int passenger_count, decimal runway_charge, int month)
 		{
 			this.flight_count = flight_count;
 			this.passenger_count = passenger_count;
 			this.runway_charge = runway_charge;
 
-			this.month = new DateTime(2016, month, 1);
+			this.month = new DateTime(2016, month, 1); // specified only for 2016
 
 			this.revenue = calculate_revenue(runway_charge, flight_count);
 		}
@@ -29,10 +25,11 @@ namespace W17As2_Wilson
 			return runway_charge * flights;
 		}
 
-		public void show_report()
+		public override string ToString()
 		{
-			Console.WriteLine("\nReport Month: {0} Flights: {1} Passengers: {3} Revenue: {4}",
-			                  month.ToString("MMMM"), flight_count, passenger_count, runway_charge, revenue);
+			// override tostring class for easy string output 
+			return string.Format("Report Month: {0} | Flights: {1} | Passengers: {3} | Revenue: {4:C}",
+							  month.ToString("MMMM"), flight_count, passenger_count, runway_charge, revenue);
 		}
 	}
 }

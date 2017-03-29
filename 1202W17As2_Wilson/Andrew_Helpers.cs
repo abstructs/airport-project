@@ -9,6 +9,8 @@ namespace W17As2_Wilson
 			{
 				Console.WriteLine(decision);
 
+				Console.Write("\nEnter a number: ");
+
 				int number;
 				bool result = int.TryParse(Console.ReadLine(), out number);
 
@@ -53,6 +55,8 @@ namespace W17As2_Wilson
 			{
 				print_decisions(decisions);
 
+				Console.Write("\nEnter a number: ");
+
 				int number;
 				bool result = int.TryParse(Console.ReadLine(), out number);
 
@@ -80,6 +84,8 @@ namespace W17As2_Wilson
 			{
 				print_decisions(decisions);
 
+				Console.Write("\nEnter a number: ");
+
 				int number;
 				bool result = int.TryParse(Console.ReadLine(), out number);
 
@@ -98,6 +104,8 @@ namespace W17As2_Wilson
 			while (true)
 			{
 				Console.WriteLine(decision);
+
+				Console.Write("\nEnter a number: ");
 
 				int number;
 				bool result = int.TryParse(Console.ReadLine(), out number);
@@ -119,6 +127,8 @@ namespace W17As2_Wilson
 			{
 				Console.Write(message);
 
+				Console.Write("\nEnter a number: ");
+
 				decimal number;
 				bool result = decimal.TryParse(Console.ReadLine(), out number);
 
@@ -138,6 +148,8 @@ namespace W17As2_Wilson
 			{
 				Console.Write(message);
 
+				//Console.WriteLine("\nPlease enter a number between {0:C} and {1:C}.", min, max);
+
 				decimal number;
 				bool result = decimal.TryParse(Console.ReadLine(), out number);
 
@@ -150,7 +162,7 @@ namespace W17As2_Wilson
 				{
 					if (number < min || number > max)
 					{
-						input_error(string.Format("Please enter a number between {0} and {1}.", min, max));
+						input_error(string.Format("Please enter a number between {0:C} and {1:C}.", min, max));
 						continue;
 					}
 				}
@@ -165,6 +177,8 @@ namespace W17As2_Wilson
 			{
 
 				Console.Write(message);
+
+				Console.Write("\nEnter a value: ");
 
 				string result = Console.ReadLine();
 				if (result != "")
